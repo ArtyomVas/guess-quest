@@ -74,10 +74,6 @@ current_word = rand_word()
 num_of_guesses = 10
 current_letter = input("Type in a letter").lower()
 
-while num_of_guesses != 0:
-    if check_letter(current_letter):
-        if
-
 
 
 
