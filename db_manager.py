@@ -30,6 +30,22 @@ def read_data(collection_name):
     client.close()
 
 
+# Get DB collection as dict
+def get_collection(collection_name):
+    return {"hints": ["1234", "1235", "1236", "1237"],
+            "numberOfPossibleSolutions": 26,
+            "scores": [{"name": "maya", "timeInSeconds": 30}, {"name": "arty", "timeInSeconds": 90}],
+            "losers": [{"name": "max", "timeInSeconds": 120}, {"name": "max_again", "timeInSeconds": 800}]}
+    client = db_connect()
+    db = client[DB_NAME]
+
+    collection = db[collection_name]
+    documents = collection.find()
+    collection_map = documents[0]
+    client.close()
+
+    return collection_map
+
 # Add new user
 def add_user(username, email, password):
 

@@ -3,40 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        {% if current_date == riddle_date %}
-            Riddle of the Day
-        {% else %}
-            Riddle {{ riddle_id }}
-        {% endif %}
-    </title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Riddle - Guess Quest</title>
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>
-            {% if current_date == riddle_date %}
-                Riddle of the Day
-            {% else %}
-                Riddle {{ riddle_id }}
-            {% endif %}
-        </h1>
-        <p>{{ riddle }}</p>
-
-        <form action="{{ url_for('check_answer') }}" method="post">
-            <input type="text" name="answer" placeholder="Enter 4-digit answer" pattern="\d{4}" required>
-            <button type="submit">Submit</button>
-        </form>
-
-        {% if result is defined %}
-            <p>{{ result }}</p>
-            {% if result == "Correct! Well done." %}
-                <p>Would you like to see this riddles scoreboard?</p>
-                <a href="{{ url_for('riddle_scoreboard') }}">Yes</a>
-                <a href="{{ url_for('index') }}">No</a>
-            {% endif %}
-        {% endif %}
+    <div id="overlay" class="overlay">
+        <div class="overlay-content">
+            <p>Are you ready to start? The clock starts ticking once you accept.</p>
+            <button id="not-now">Not now</button>
+            <button id="start">Start</button>
+        </div>
     </div>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+    <div class="container" id="riddle-container">
+        <h1>Guess the code for the safe</h1>
+        <p>It is a 4 digit number that meets the next constraints:</p>
+        <ul>
+            <li>This number contains one correct number in the correct place: <span id="constraint1">{placeholder}</span></li>
+            <li>This number contains two correct numbers but in different places: <span id="constraint2">{placeholder}</span></li>
+            <li>This number contains two correct numbers in the correct places: <span id="constraint3">{placeholder}</span></li>
+            <li>This number doesn't contain any correct number: <span id="constraint4">{placeholder}</span></li>
+        </ul>
+        <input type="text" id="safe-code" placeholder="What is the code to the safe?">
+        <button id="give-up">I give up</button>
+    </div>
+
+    <script src="/static/js/riddle.js"></script>
 </body>
 </html>
