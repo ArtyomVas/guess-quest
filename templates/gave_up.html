@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Winners page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Wow, you actually gave up, there were like {{ number_of_solutions }} options</h1>
+        <p>But you are not the only one:</p>
+        <table id="user-table">
+            <thead>
+                <tr>
+                    <th>Loser name</th>
+                    <th>Gave up after.. (in seconds)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in losers %}
+                    <tr>
+                        <td>{{ user['name'] }}</td>
+                        <td>{{ user['timeInSeconds'] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
