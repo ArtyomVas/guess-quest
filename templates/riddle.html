@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Riddle - Guess Quest</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/riddle.css">
 </head>
 <body>
     <div id="overlay" class="overlay">
@@ -15,17 +15,20 @@
         </div>
     </div>
 
-    <div class="container" id="riddle-container">
+    <div class="container" id="riddle-container" style="display:none;">
         <h1>Guess the code for the safe</h1>
         <p>It is a 4 digit number that meets the next constraints:</p>
         <ul>
-            <li>This number contains one correct number in the correct place: <span id="constraint1">{placeholder}</span></li>
-            <li>This number contains two correct numbers but in different places: <span id="constraint2">{placeholder}</span></li>
-            <li>This number contains two correct numbers in the correct places: <span id="constraint3">{placeholder}</span></li>
-            <li>This number doesn't contain any correct number: <span id="constraint4">{placeholder}</span></li>
+            <li>This number contains one correct number in the correct place: <span id="constraint1">{{ hint1 }}</span></li>
+            <li>This number contains two correct numbers but in different places: <span id="constraint2">{{ hint2 }}</span></li>
+            <li>This number contains two correct numbers in the correct places: <span id="constraint3">{{ hint3 }}</span></li>
+            <li>This number doesn't contain any correct number: <span id="constraint4">{{ hint4 }}</span></li>
         </ul>
         <input type="text" id="safe-code" placeholder="What is the code to the safe?">
-        <button id="give-up">I give up</button>
+        <div class="button-container">
+            <button id="check-answer">Check My Answer</button>
+            <button id="give-up">I give up</button>
+        </div>
     </div>
 
     <script src="/static/js/riddle.js"></script>

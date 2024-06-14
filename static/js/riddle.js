@@ -1,9 +1,8 @@
-// riddle.js
-
 // Get the overlay and buttons
 var overlay = document.getElementById("overlay");
 var notNowButton = document.getElementById("not-now");
 var startButton = document.getElementById("start");
+var riddleContainer = document.getElementById("riddle-container");
 
 // "Not now" button redirection
 notNowButton.onclick = function() {
@@ -13,9 +12,35 @@ notNowButton.onclick = function() {
 // "Start" button functionality
 startButton.onclick = function() {
     overlay.style.display = "none";
+    riddleContainer.style.display = "block";
 }
 
-// "Give up" button functionality
 document.getElementById('give-up').onclick = function() {
-    alert('Keep trying! You can do it!');
+    var confirmGiveUp = confirm("Are you sure you want to give up?");
+    if (confirmGiveUp) {
+        location.href = '/gave_up';
+    }
+}
+
+// "Check My Answer" button functionality
+document.getElementById('check-answer').onclick = function() {
+    var userAnswer = document.getElementById('safe-code').value;
+
+    // Send AJAX request to backend to check the answer
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/check_user_answer", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            var response = JSON.parse(xhr.responseText);
+            if (response.correct) {
+                location.href = '/finished';
+            } else {
+                alert('That is not correct. Try again!');
+            }
+        }
+    };
+
+    xhr.send("answer=" + encodeURIComponent(userAnswer));
 }
