@@ -92,24 +92,24 @@ def generate_unique_number(original_number):
     return ''.join(permutations[0])
 
 
-# # Generate the original random 4-digit number
-# original_number = generate_random_number()
-# print("Original 4-digit random number:", original_number)
-#
-# # Generate derived numbers
-# one_digit = choose_digit_and_index(original_number)
-# two_digits_diff = choose_two_digits_and_indices(original_number)
-# two_digits_same = choose_two_digits_and_indices(original_number)
-# unique_number = generate_unique_number(original_number)
-#
-# # Generate specific derived numbers
-# same_digit_number = generate_new_number_with_same_digit(one_digit[0], one_digit[1])
-# print(f"One digit at same place: {one_digit} -> {same_digit_number}")
-# different_places_number = generate_new_number_with_two_digits(two_digits_diff[0], two_digits_diff[1], set(original_number))
-# print(f"Two digits at different places: {two_digits_diff} -> {different_places_number}")
-# same_places_number = generate_new_number_with_two_digits_at_same_indices(two_digits_same[0], two_digits_same[1], set(original_number))
-# print(f"Two digits at same places: {two_digits_same} -> {same_places_number}")
-# print(f"Completely different number: {unique_number}")
+def create_riddle():
+    original_number = generate_random_number()
+    print("Original 4-digit random number:", original_number)
+    one_digit = choose_digit_and_index(original_number)
+    two_digits_diff = choose_two_digits_and_indices(original_number)
+    two_digits_same = choose_two_digits_and_indices(original_number)
+    unique_number = generate_unique_number(original_number)
+    same_digit_number = generate_new_number_with_same_digit(one_digit[0], one_digit[1])
+    print(f"One digit at same place: {one_digit} -> {same_digit_number}")
+    different_places_number = generate_new_number_with_two_digits(two_digits_diff[0], two_digits_diff[1],
+                                                                  set(original_number))
+    print(f"Two digits at different places: {two_digits_diff} -> {different_places_number}")
+    same_places_number = generate_new_number_with_two_digits_at_same_indices(two_digits_same[0], two_digits_same[1],
+                                                                             set(original_number))
+    print(f"Two digits at same places: {two_digits_same} -> {same_places_number}")
+    print(f"Completely different number: {unique_number}")
+
+    return [same_digit_number, different_places_number, same_places_number, unique_number]
 
 
 ###########################################################################################

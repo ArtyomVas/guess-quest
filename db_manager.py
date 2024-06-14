@@ -32,7 +32,7 @@ def read_data(collection_name):
 
 # Get DB collection as dict
 def get_collection(collection_name):
-    return {"hints": ["1234", "1235", "1236", "1237"],
+    return {"hints": ["9290", "9676", "1935", "3688"],
             "numberOfPossibleSolutions": 26,
             "scores": [{"name": "maya", "timeInSeconds": 30}, {"name": "arty", "timeInSeconds": 90}],
             "losers": [{"name": "max", "timeInSeconds": 120}, {"name": "max_again", "timeInSeconds": 800}]}
@@ -63,17 +63,19 @@ def add_user(username, email, password):
         }
 
         if collection.find_one({"username": username}):
-            raise Exception(f"Username {username} already exists!")
+            return f"Username {username} already exists!"
 
         elif collection.find_one({"email": email}):
-            raise Exception(f"Email {email} already exists!")
+            return f"Email {email} already exists!"
 
         else:
             collection.insert_one(user_document)
             print("User added successfully")
+            return True
 
     except Exception as err:
         print(f"An error occurred while adding user: {str(err)}")
+        return "An error occurred while adding user"
 
     finally:
         client.close()
@@ -162,19 +164,22 @@ def validate_user(identifier, password):
         })
 
         if user:
-            if bcrypt.checkpw(password.encode('utf-8'), user["password"].encode('utf-8')):
+            if isinstance(user["password"], str):
+                stored_password = user["password"].encode('utf-8')
+            else:
+                stored_password = user["password"]
+
+            if bcrypt.checkpw(password.encode('utf-8'), stored_password):
                 return True
             else:
-                print(f"Password is incorrect!")
+                return "Password is incorrect!"
 
         else:
-            print(f"User {identifier} doesn't exist!")
-
-        return False
+            return f"User {identifier} doesn't exist!"
 
     except Exception as err:
         print(f"An error occurred while authenticating user ({identifier}): {str(err)}")
-        return False
+        return f"Failed to check user {identifier}"
 
     finally:
         client.close()

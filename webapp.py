@@ -10,28 +10,49 @@ def index():
     return render_template('main_page.html', riddle=riddle)
 
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        check = validate_user(username, password)
+        if check is True:
+            return redirect(url_for('riddle'))
+        elif check != "":
+            return render_template('login.html', error=check)
     return render_template('login.html')
 
-@app.route('/signup')
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+        confirm_password = request.form['confirm-password']
+        print(confirm_password)
+        print(password)
+        if password != confirm_password:
+            print("dont match")
+            return render_template('signup.html', error="Passwords don't match!")
+        check = add_user(username, email, password)
+        if check is True:
+            return redirect(url_for('login'))
+        elif check != "":
+            return render_template('signup.html', error=check)
+
     return render_template('signup.html')
 
 @app.route('/riddle')
 def riddle():
-    return render_template('riddle.html')
+    riddle_dict = get_collection("riddleOfTheDay")
+    hints = riddle_dict['hints']
+    return render_template('riddle.html', hint1=hints[0], hint2=hints[1], hint3=hints[2], hint4=hints[3])
 
 @app.route('/check_user_answer', methods=['POST'])
 def check_user_answer():
     user_answer = request.form['answer']
     correct = is_valid_number(user_answer)
-    if correct:
-        result = "Correct! Well done."
-    else:
-        result = "Incorrect. Try again!"
-    riddle = get_riddle_of_the_day()
-    return render_template('main_page.html', riddle=riddle, result=result)
+    return jsonify(correct=correct)
 
 
 @app.route('/finished')
