@@ -2,10 +2,10 @@ from pymongo import MongoClient
 import bcrypt
 
 # DB connection details
-DB_NAME = "gushProject"
+DB_NAME = "guessquest"
 DB_USER = "admin"
 DB_PASSWORD = "admin"
-DB_HOST = "localhost"
+DB_HOST = "mongodb" # Cluster service name
 DB_PORT = "27017"
 
 
@@ -32,10 +32,10 @@ def read_data(collection_name):
 
 # Get DB collection as dict
 def get_collection(collection_name):
-    return {"hints": ["9290", "9676", "1935", "3688"],
-            "numberOfPossibleSolutions": 26,
-            "scores": [{"name": "maya", "timeInSeconds": 30}, {"name": "arty", "timeInSeconds": 90}],
-            "losers": [{"name": "max", "timeInSeconds": 120}, {"name": "max_again", "timeInSeconds": 800}]}
+    # return {"hints": ["9290", "9676", "1935", "3688"],
+    #         "numberOfPossibleSolutions": 26,
+    #         "scores": [{"name": "maya", "timeInSeconds": 30}, {"name": "arty", "timeInSeconds": 90}],
+    #         "losers": [{"name": "max", "timeInSeconds": 120}, {"name": "max_again", "timeInSeconds": 800}]}
     client = db_connect()
     db = client[DB_NAME]
 

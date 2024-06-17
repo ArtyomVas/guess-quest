@@ -6,8 +6,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    riddle = get_riddle_of_the_day()
-    return render_template('main_page.html', riddle=riddle)
+    return render_template('main_page.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -73,4 +72,4 @@ def api_riddle():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)
