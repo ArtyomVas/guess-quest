@@ -38,15 +38,33 @@ jenkins:
 prometheus:
   server:
     replicaCount: 1
+    namespaceOverride: observation
     config:
       scrape_configs:
         - job_name: 'webapp'
           static_configs:
-            - targets: [ 'webapp.default.svc.cluster.local:5000' ]
+            - targets: ['webapp.default.svc.cluster.local:5000']
   alertmanager:
     enabled: false
+    namespaceOverride: observation
   pushgateway:
     enabled: false
+    namespaceOverride: observation
+
+nodeExporter:
+  hostRootFsMount: false
+  resources:
+    requests:
+      memory: "100Mi"
+      cpu: "100m"
+    limits:
+      memory: "200Mi"
+      cpu: "200m"
+  extraArgs:
+    - --path.procfs=/proc
+    - --path.sysfs=/sys
+    - --web.listen-address=:9100
+  namespaceOverride: observation
 
 grafana:
   enabled: true
@@ -61,5 +79,6 @@ grafana:
         - name: Prometheus
           type: prometheus
           access: proxy
-          url: http://prometheus-server.default.svc.cluster.local
+          url: http://prometheus-server.observation.svc.cluster.local
           isDefault: true
+  namespaceOverride: observation

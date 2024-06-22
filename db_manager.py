@@ -292,30 +292,21 @@ def update_user_solved_riddle(user_id, riddle_id):
 
 def update_user_gaveup_riddle(user_id, riddle_id):
     try:
-        print("MDEBUG: start update_user_gaveup_riddle")
-        print(f"MDEBUG: (update_user_gaveup_riddle) user_id - {user_id}")
-        print(f"MDEBUG: (update_user_gaveup_riddle) riddle_id - {riddle_id}")
-
         current_time = datetime.now()
         client = db_connect()
         db = client[DB_NAME]
         collection = db.users
         user_dict = collection.find_one({"username": user_id, "riddles.riddleId": riddle_id}, {"riddles.$": 1})
-        print(f"MDEBUG: (update_user_gaveup_riddle) user_dict - {user_dict}")
         starting_time = user_dict['riddles'][0].get('startedIn')
-        print(f"MDEBUG: (update_user_gaveup_riddle) starting_time - {starting_time}")
         total_work_time_seconds = (current_time - starting_time).total_seconds()
-        print(f"MDEBUG: (update_user_gaveup_riddle) total_work_time_seconds - {total_work_time_seconds}")
 
         search_filter = {"username": user_id}
-        print(f"MDEBUG: (update_user_gaveup_riddle) search_filter - {search_filter}")
 
         update_fields = {
             'status': 'gaveup',
             'finishedAt': current_time,
             'totalWorkTimeSeconds': total_work_time_seconds
         }
-        print(f"MDEBUG: (update_user_gaveup_riddle) update_fields - {update_fields}")
 
         update_document = {f"riddles.$[riddle].{k}": v for k, v in update_fields.items()}
 
@@ -324,7 +315,6 @@ def update_user_gaveup_riddle(user_id, riddle_id):
             {"$set": update_document},
             array_filters=[{"riddle.riddleId": riddle_id}]
         )
-        print(f"MDEBUG: (update_user_gaveup_riddle) after update gavup")
 
         if result.matched_count > 0:
             print("Riddle was updated as a gaveup for user")

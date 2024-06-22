@@ -3,9 +3,15 @@ name: guessquest-packge
 description: A help chart for running a guessquest cluster
 type: application
 version: 0.1.0
-appVersion: "1.16.0"
+appVersion: "2.0.0"
 
 dependencies:
   - name: jenkins
     version: 5.3.1
     repository: "https://charts.jenkins.io"
+  - name: grafana
+    version: 8.0.2
+    repository: "https://grafana.github.io/helm-charts"
+  - name: prometheus
+    version: 25.22.0
+    repository: "https://prometheus-community.github.io/helm-charts"

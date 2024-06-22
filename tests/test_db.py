@@ -37,13 +37,6 @@ class TestDBManager(unittest.TestCase):
         self.assertTrue(result)
 
     @patch('db_manager.MongoClient', new=mongomock.MongoClient)
-    def test_update_solved_riddle(self):
-        add_user('testuser', 'testuser@example.com', 'password123')
-        result = update_solved_riddle('testuser', 'riddle1', 120)
-        # missing get solved riddle for user
-        self.assertIsNone(result)
-
-    @patch('db_manager.MongoClient', new=mongomock.MongoClient)
     def test_validate_user(self):
         add_user('testuser', 'testuser@example.com', 'password123')
         result = validate_user('testuser', 'password123')

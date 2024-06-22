@@ -57,10 +57,7 @@ def signup():
         email = request.form['email']
         password = request.form['password']
         confirm_password = request.form['confirm-password']
-        print(confirm_password)
-        print(password)
         if password != confirm_password:
-            print("dont match")
             return render_template('signup.html', error="Passwords don't match!")
         check = add_user(username, email, password)
         if check is True:
@@ -88,7 +85,6 @@ def riddle():
     elif user_has_gaveup_riddle(current_user.id, riddle_id):
         return redirect(url_for('riddle_losers_board'))
     update_user_start_riddle(current_user.id, riddle_id)
-    print(f"MDEBUG: start riddle")
     return render_template('riddle.html', hint1=hints[0], hint2=hints[1], hint3=hints[2], hint4=hints[3])
 
 
@@ -113,15 +109,12 @@ def riddle_scoreboard():
 
 @app.route('/gave_up')
 def riddle_losers_board():
-    print(f"MDEBUG: start riddle_losers_board")
     riddle_dict = get_collection("riddleOfTheDay")
     if not user_has_gaveup_riddle(current_user.id, riddle_dict['_id']):
         update_user_gaveup_riddle(current_user.id, riddle_dict['_id'])
         riddle_dict = get_collection("riddleOfTheDay")
     losers = riddle_dict["losers"]
-    print(f"MDEBUG: losers - {losers}")
     number_of_solutions = riddle_dict["numberOfPossibleSolutions"]
-    print(f"MDEBUG: number_of_solutions - {number_of_solutions}")
     return render_template('gave_up.html', losers=losers, number_of_solutions=number_of_solutions)
 
 

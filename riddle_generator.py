@@ -154,21 +154,6 @@ def get_number_of_riddle_solutions(hint1, hint2, hint3, hint4):
     return len(valid_numbers)
 
 
-#######################################################################################
-# examine later
-
-
-# Get riddle of the day as string
-def get_riddle_of_the_day():
-    riddle_dict = get_collection("riddleOfTheDay")
-    riddle = f"1 digit here is correct and also in the correct place - {riddle_dict['hints'][0]}\n"
-    riddle += f"2 digit here are correct but in the wrong places - {riddle_dict['hints'][1]}\n"
-    riddle += f"2 digit here are correct and also in the correct places - {riddle_dict['hints'][2]}\n"
-    riddle += f"No digit is correct here - {riddle_dict['hints'][3]}"
-
-    return riddle
-
-
 def user_has_solved_riddle(user_id, riddle_id):
     user_data_dict = get_user_dict(user_id)
 
