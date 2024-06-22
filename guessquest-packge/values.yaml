@@ -33,7 +33,54 @@ jenkins:
       - login-theme
       - prometheus
       - github-oauth
+    persistence:
+      enabled: true
+      size: 8Gi
+    ingress:
+      enabled: true
+      annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: /
+      paths:
+        - path: /ci
+          pathType: Prefix
+          backend:
+            service:
+              name: gq-helm-test-jenkins
+              port:
+                number: 8080
+      hosts:
+        - guessquest
   namespaceOverride: jenkins
+  agent:
+    enabled: true
+    image:
+      repository: "artyom1996/my-jenkins-agent"
+      tag: "latest"
+
+ingress:
+  enabled: true
+  annotations: {}
+  ingressClassName: nginx
+  hosts:
+    - host: guessquest
+      paths:
+        - path: /ci
+          service:
+            name: jenkins
+            port: 8080
+        - path: /monitor
+          service:
+            name: prometheus
+            port: 9090
+        - path: /observe
+          service:
+            name: grafana
+            port: 3000
+        - path: /database
+          service:
+            name: mongodb
+            port: 27017
+  tls: []
 
 prometheus:
   server:

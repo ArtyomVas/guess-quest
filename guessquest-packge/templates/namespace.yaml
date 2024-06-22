@@ -13,4 +13,3 @@ metadata:
   annotations:
     "helm.sh/hook": pre-install
     "helm.sh/hook-delete-policy": before-hook-creation
-
