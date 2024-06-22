@@ -1,20 +1,3 @@
-// Get the overlay and buttons
-var overlay = document.getElementById("overlay");
-var notNowButton = document.getElementById("not-now");
-var startButton = document.getElementById("start");
-var riddleContainer = document.getElementById("riddle-container");
-
-// "Not now" button redirection
-notNowButton.onclick = function() {
-    location.href = '/';
-}
-
-// "Start" button functionality
-startButton.onclick = function() {
-    overlay.style.display = "none";
-    riddleContainer.style.display = "block";
-}
-
 document.getElementById('give-up').onclick = function() {
     var confirmGiveUp = confirm("Are you sure you want to give up?");
     if (confirmGiveUp) {

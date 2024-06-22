@@ -116,44 +116,42 @@ def create_riddle():
 # Counts how many numbers can meet the constraints:
 
 
-def is_valid_number(number):
-    riddle_dict = get_collection("riddleOfTheDay")
-
+def is_valid_number(number, hint1, hint2, hint3, hint4):
     # Constraint 1: One digit is correct and in the correct index: same_digit_number
-    constraint1 = riddle_dict['hints'][0]
+    constraint1 = hint1
     correct_count = sum(1 for i in range(4) if number[i] == constraint1[i])
     if correct_count < 1:
         return False
 
     # Constraint 2: Two digits are correct but in different indexes: different_places_number
-    constraint2 = riddle_dict['hints'][1]
+    constraint2 = hint2
     correct_digits = [i for i in range(4) if number[i] in constraint2 and number[i] != constraint2[i]]
     if len(correct_digits) != 2:
         return False
 
     # Constraint 3: Two digits are correct and in their correct indexes: same_places_number
-    constraint3 = riddle_dict['hints'][2]
+    constraint3 = hint3
     correct_count = sum(1 for i in range(4) if number[i] == constraint3[i])
     if correct_count != 2:
         return False
 
     # Constraint 4: None of the digits are correct: unique_number
-    constraint4 = riddle_dict['hints'][3]
+    constraint4 = hint4
     if any(digit in constraint4 for digit in number):
         return False
 
     return True
 
 
-def find_valid_numbers():
+def get_number_of_riddle_solutions(hint1, hint2, hint3, hint4):
     valid_numbers = []
     for number in range(0, 10000):
-        str_number = str(number).zfill(4)  # Converts number to a 4-digit string
-        if is_valid_number(str_number):
+        str_number = str(number).zfill(4)
+        if is_valid_number(str_number, hint1, hint2, hint3, hint4):
             valid_numbers.append(str_number)
-    print("Number of possible answers:", len(valid_numbers))
+    # print("Number of possible answers:", len(valid_numbers))
     print("Valid numbers that meet all constraints:", valid_numbers)
-    return valid_numbers
+    return len(valid_numbers)
 
 
 #######################################################################################
@@ -171,17 +169,21 @@ def get_riddle_of_the_day():
     return riddle
 
 
-# Get riddle of the day as string
-def get_number_of_riddle_solutions():
-    riddle_dict = get_collection("riddleOfTheDay")
-    return riddle_dict["numberOfPossibleSolutions"]
+def user_has_solved_riddle(user_id, riddle_id):
+    user_data_dict = get_user_dict(user_id)
+
+    for riddle in user_data_dict["riddles"]:
+        if riddle["riddleId"] == riddle_id and riddle["status"] == "solved":
+            return True
+
+    return False
 
 
-def get_scores():
-    riddle_dict = get_collection("riddleOfTheDay")
-    return riddle_dict["scores"]
+def user_has_gaveup_riddle(user_id, riddle_id):
+    user_data_dict = get_user_dict(user_id)
 
+    for riddle in user_data_dict["riddles"]:
+        if riddle["riddleId"] == riddle_id and riddle["status"] == "gaveup":
+            return True
 
-def get_losers():
-    riddle_dict = get_collection("riddleOfTheDay")
-    return riddle_dict["losers"]
+    return False
