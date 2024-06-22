@@ -13,11 +13,3 @@ metadata:
   annotations:
     "helm.sh/hook": pre-install
     "helm.sh/hook-delete-policy": before-hook-creation
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: argocd
-  annotations:
-    "helm.sh/hook": pre-install
-    "helm.sh/hook-delete-policy": before-hook-creation
