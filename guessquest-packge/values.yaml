@@ -34,3 +34,32 @@ jenkins:
       - prometheus
       - github-oauth
   namespaceOverride: jenkins
+
+prometheus:
+  server:
+    replicaCount: 1
+    config:
+      scrape_configs:
+        - job_name: 'webapp'
+          static_configs:
+            - targets: [ 'webapp.default.svc.cluster.local:5000' ]
+  alertmanager:
+    enabled: false
+  pushgateway:
+    enabled: false
+
+grafana:
+  enabled: true
+  adminPassword: 'admin'
+  sidecar:
+    datasources:
+      enabled: true
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: Prometheus
+          type: prometheus
+          access: proxy
+          url: http://prometheus-server.default.svc.cluster.local
+          isDefault: true

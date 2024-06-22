@@ -2,12 +2,18 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from riddle_generator import *
 from db_manager import *
+from prometheus_client import Counter, generate_latest
 
 app = Flask(__name__)
 app.secret_key = 'secret_guessquest_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
+# Prometheus metrics
+REQUEST_COUNT = Counter('request_count', 'Total number of requests')
+LOGIN_COUNT = Counter('login_count', 'Total number of logins')
+SIGNUP_COUNT = Counter('signup_count', 'Total number of signups')
 
 
 class User(UserMixin):
@@ -123,6 +129,11 @@ def riddle_losers_board():
 def api_riddle():
     riddle_dict = get_collection("riddleOfTheDay")
     return jsonify(riddle_dict)
+
+
+@app.route('/metrics')
+def metrics():
+    return Response(generate_latest(), mimetype='text/plain')
 
 
 if __name__ == '__main__':
