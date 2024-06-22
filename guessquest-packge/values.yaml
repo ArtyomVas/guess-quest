@@ -4,7 +4,7 @@ webapp:
   replicaCount: 1
   image: artyom1996/gqwebapp
   containerPort: 5000
-  servicePort: 30080
+  servicePort: 30081
 
 mongodb:
   replicaCount: 1
