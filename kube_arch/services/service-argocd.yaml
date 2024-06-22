@@ -4,9 +4,10 @@ metadata:
   name: argocd-server
   namespace: argocd
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
-  - port: 80
-    targetPort: 80
+    - port: 80
+      targetPort: 8080
+      nodePort: 30007
   selector:
-    app: argocd-server
+    app.kubernetes.io/name: argocd-server

@@ -1,0 +1,36 @@
+replicaCount: 1
+
+webapp:
+  replicaCount: 1
+  image: artyom1996/gqwebapp
+  containerPort: 5000
+  servicePort: 30080
+
+mongodb:
+  replicaCount: 1
+  image: mongo:latest
+  rootUsername: admin
+  rootPassword: admin
+  storageSize: 10Gi
+  mongoPort: 27017
+
+jenkins:
+  controller:
+    serviceType: NodePort
+    nodePort: 32000
+    servicePort: 8080
+    admin:
+      username: admin
+      password: Aa123456
+    installPlugins:
+      - kubernetes
+      - workflow-aggregator
+      - git
+      - configuration-as-code
+      - gitlab-plugin
+      - blueocean
+      - workflow-multibranch
+      - login-theme
+      - prometheus
+      - github-oauth
+  namespaceOverride: jenkins
