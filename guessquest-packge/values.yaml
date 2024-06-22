@@ -107,10 +107,6 @@ nodeExporter:
     limits:
       memory: "200Mi"
       cpu: "200m"
-  extraArgs:
-    - --path.procfs=/proc
-    - --path.sysfs=/sys
-    - --web.listen-address=:9100
   namespaceOverride: observation
 
 grafana:
