@@ -1,13 +1,11 @@
 replicaCount: 1
 
 webapp:
-  replicaCount: 1
   image: artyom1996/gqwebapp
   containerPort: 5000
-  servicePort: 30081
+  servicePort: 30080
 
 mongodb:
-  replicaCount: 1
   image: mongo:latest
   rootUsername: admin
   rootPassword: admin
@@ -15,119 +13,78 @@ mongodb:
   mongoPort: 27017
 
 jenkins:
-  controller:
-    serviceType: NodePort
-    nodePort: 32000
-    servicePort: 8080
-    admin:
-      username: admin
-      password: Aa123456
-    installPlugins:
-      - kubernetes
-      - workflow-aggregator
-      - git
-      - configuration-as-code
-      - gitlab-plugin
-      - blueocean
-      - workflow-multibranch
-      - login-theme
-      - prometheus
-      - github-oauth
-    persistence:
-      enabled: true
-      size: 8Gi
-    ingress:
-      enabled: true
-      annotations:
-        nginx.ingress.kubernetes.io/rewrite-target: /
-      paths:
-        - path: /ci
-          pathType: Prefix
-          backend:
-            service:
-              name: gq-helm-test-jenkins
-              port:
-                number: 8080
-      hosts:
-        - guessquest
-  namespaceOverride: jenkins
-  agent:
+  image: jenkins/jenkins:lts
+  servicePort: 8080
+  admin:
+    username: admin
+    password: Aa123456
+  installPlugins:
+    - kubernetes
+    - workflow-aggregator
+    - git
+    - configuration-as-code
+    - gitlab-plugin
+    - blueocean
+    - workflow-multibranch
+    - login-theme
+    - prometheus
+    - github-oauth
+  persistence:
     enabled: true
-    image:
-      repository: "artyom1996/my-jenkins-agent"
-      tag: "latest"
+    size: 8Gi
+
+prometheus:
+  server:
+    servicePort: 9090
+    config:
+      prometheus.yml:
+        scrape_configs:
+          - job_name: 'webapp'
+            static_configs:
+              - targets: ['webapp-service.default.svc.cluster.local:30080']
+          - job_name: 'mongodb'
+            static_configs:
+              - targets: ['mongodb-service.default.svc.cluster.local:27017']
+          - job_name: 'jenkins'
+            static_configs:
+              - targets: ['jenkins-service.jenkins.svc.cluster.local:8080']
+          - job_name: 'argocd'
+            static_configs:
+              - targets: ['argocd-server.argocd.svc.cluster.local:80']
+
+grafana:
+  image: grafana/grafana:latest
+  servicePort: 3000
+
+argocd:
+  server:
+    servicePort: 80
 
 ingress:
   enabled: true
   annotations: {}
   ingressClassName: nginx
   hosts:
-    - host: guessquest
+    - host: guessquest.local
       paths:
+        - path: /
+          backend:
+            serviceName: webapp-service
+            servicePort: 30080
         - path: /ci
-          service:
-            name: jenkins
-            port: 8080
+          backend:
+            serviceName: jenkins-service
+            servicePort: 8080
         - path: /monitor
-          service:
-            name: prometheus
-            port: 9090
+          backend:
+            serviceName: prometheus-service
+            servicePort: 9090
         - path: /observe
-          service:
-            name: grafana
-            port: 3000
-        - path: /database
-          service:
-            name: mongodb
-            port: 27017
+          backend:
+            serviceName: grafana-service
+            servicePort: 3000
+        - path: /argocd
+          backend:
+            serviceName: argocd-server
+            servicePort: 80
   tls: []
-
-prometheus:
-  server:
-    replicaCount: 1
-    service:
-      type: NodePort
-      nodePort: 30020
-    namespaceOverride: observation
-    config:
-      scrape_configs:
-        - job_name: 'webapp'
-          static_configs:
-            - targets: ['webapp.default.svc.cluster.local:5000']
-  alertmanager:
-    enabled: false
-    namespaceOverride: observation
-  pushgateway:
-    enabled: false
-    namespaceOverride: observation
-
-nodeExporter:
-  hostRootFsMount: false
-  resources:
-    requests:
-      memory: "100Mi"
-      cpu: "100m"
-    limits:
-      memory: "200Mi"
-      cpu: "200m"
-  namespaceOverride: observation
-
-grafana:
-  enabled: true
-  adminPassword: 'admin'
-  service:
-    type: NodePort
-    nodePort: 30000
-  sidecar:
-    datasources:
-      enabled: true
-  datasources:
-    datasources.yaml:
-      apiVersion: 1
-      datasources:
-        - name: Prometheus
-          type: prometheus
-          access: proxy
-          url: http://prometheus-server.observation.svc.cluster.local
-          isDefault: true
-  namespaceOverride: observation

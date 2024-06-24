@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-service
+  namespace: observation
+spec:
+  selector:
+    app: prometheus
+  ports:
+    - protocol: TCP
+      port: {{ .Values.prometheus.server.servicePort }}
+      targetPort: {{ .Values.prometheus.server.servicePort }}

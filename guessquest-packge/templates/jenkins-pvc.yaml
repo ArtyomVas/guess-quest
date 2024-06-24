@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mongodb-pvc
-  namespace: default
+  name: jenkins-pvc
+  namespace: jenkins
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: {{ .Values.mongodb.storageSize }}
+      storage: {{ .Values.jenkins.persistence.size }}

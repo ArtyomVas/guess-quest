@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins-deployment
+  namespace: jenkins
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: jenkins
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      containers:
+      - name: jenkins
+        image: {{ .Values.jenkins.image }}
+        ports:
+        - containerPort: {{ .Values.jenkins.servicePort }}
+        env:
+        - name: JENKINS_ADMIN_ID
+          value: {{ .Values.jenkins.admin.username }}
+        - name: JENKINS_ADMIN_PASSWORD
+          value: {{ .Values.jenkins.admin.password }}
+        volumeMounts:
+        - name: jenkins-storage
+          mountPath: /var/jenkins_home
+      volumes:
+      - name: jenkins-storage
+        persistentVolumeClaim:
+          claimName: jenkins-pvc
