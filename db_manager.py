@@ -1,6 +1,8 @@
 from pymongo import MongoClient
 import bcrypt
 from datetime import datetime
+import subprocess
+import os
 
 # DB connection details
 DB_NAME = "guessquest"
@@ -39,8 +41,12 @@ def get_collection(collection_name):
     #         "losers": [{"name": "max", "timeInSeconds": 120}, {"name": "max_again", "timeInSeconds": 800}]}
     client = db_connect()
     db = client[DB_NAME]
-
     collection = db[collection_name]
+
+    if collection.count_documents({}) == 0:
+        script_path = os.path.join(os.path.dirname(__file__), 'riddle_update.py')
+        subprocess.run(['python', script_path])
+
     documents = collection.find()
     collection_map = documents[0]
     client.close()
