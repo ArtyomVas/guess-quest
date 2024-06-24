@@ -112,6 +112,9 @@ nodeExporter:
 grafana:
   enabled: true
   adminPassword: 'admin'
+  service:
+    type: NodePort
+    nodePort: 3000
   sidecar:
     datasources:
       enabled: true
