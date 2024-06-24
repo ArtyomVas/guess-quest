@@ -56,10 +56,6 @@ grafana:
   image: grafana/grafana:latest
   servicePort: 3000
 
-argocd:
-  server:
-    servicePort: 80
-
 ingress:
   enabled: true
   annotations: {}
@@ -70,21 +66,17 @@ ingress:
         - path: /
           backend:
             serviceName: webapp-service
-            servicePort: 30080
+            servicePort: 30050
         - path: /ci
           backend:
             serviceName: jenkins-service
-            servicePort: 8080
+            servicePort: 30040
         - path: /monitor
           backend:
             serviceName: prometheus-service
-            servicePort: 9090
+            servicePort: 30090
         - path: /observe
           backend:
             serviceName: grafana-service
-            servicePort: 3000
-        - path: /argocd
-          backend:
-            serviceName: argocd-server
-            servicePort: 80
+            servicePort: 30030
   tls: []
