@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-exporter
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb-exporter
+  template:
+    metadata:
+      labels:
+        app: mongodb-exporter
+    spec:
+      containers:
+      - name: mongodb-exporter
+        image: bitnami/mongodb-exporter:latest
+        env:
+        - name: MONGODB_URI
+          value: "mongodb://admin:admin@mongodb-service.default.svc.cluster.local:27017"
+        ports:
+        - containerPort: 9216

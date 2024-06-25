@@ -42,15 +42,18 @@ prometheus:
           - job_name: 'webapp'
             static_configs:
               - targets: ['webapp-service.default.svc.cluster.local:30080']
-          - job_name: 'mongodb'
+          - job_name: 'mongodb-exporter'
             static_configs:
-              - targets: ['mongodb-service.default.svc.cluster.local:27017']
+              - targets: [ 'mongodb-exporter.default.svc.cluster.local:9216' ]
           - job_name: 'jenkins'
             static_configs:
               - targets: ['jenkins-service.jenkins.svc.cluster.local:8080']
           - job_name: 'argocd'
+            scheme: https
+            tls_config:
+              insecure_skip_verify: true
             static_configs:
-              - targets: ['argocd-server.argocd.svc.cluster.local:80']
+              - targets: [ 'argocd-server.argocd.svc.cluster.local:80' ]
 
 grafana:
   image: grafana/grafana:latest
