@@ -24,4 +24,4 @@ spec:
       volumes:
       - name: prometheus-config-volume
         configMap:
-          name: prometheus-configmap
+          name: prometheus-server-conf
