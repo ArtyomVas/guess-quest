@@ -93,7 +93,16 @@ prometheus:
       scrape_configs:
         - job_name: 'webapp'
           static_configs:
-            - targets: ['webapp.default.svc.cluster.local:5000']
+            - targets: ['webapp.default.svc.cluster.local:30081']
+        - job_name: 'mongodb'
+          static_configs:
+            - targets: ['mongodb.default.svc.cluster.local:27017']
+        - job_name: 'jenkins'
+          static_configs:
+            - targets: ['jenkins.jenkins.svc.cluster.local:8080']
+        - job_name: 'argocd'
+          static_configs:
+            - targets: ['argocd-server.argocd.svc.cluster.local:80']
   alertmanager:
     enabled: false
     namespaceOverride: observation
