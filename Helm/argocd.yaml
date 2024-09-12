@@ -1,0 +1,41 @@
+# argocd-namespace-deployment.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: argocd
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: argocd
+  template:
+    metadata:
+      labels:
+        app: argocd
+    spec:
+      containers:
+      - name: argocd
+        image: argoproj/argocd:latest
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: argocd-service
+  namespace: argocd
+spec:
+  selector:
+    app: argocd
+  ports:
+    - protocol: TCP
+      port: 80        # External port
+      targetPort: 8080 # Port ArgoCD listens to inside the container
+  type: LoadBalancer

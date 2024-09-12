@@ -1,0 +1,77 @@
+# observation-namespace-deployment.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: observation
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  namespace: observation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+      - name: prometheus
+        image: prom/prometheus:latest
+        ports:
+        - containerPort: 9090
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: observation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+      - name: grafana
+        image: grafana/grafana:latest
+        ports:
+        - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-service
+  namespace: observation
+spec:
+  selector:
+    app: prometheus
+  ports:
+    - protocol: TCP
+      port: 80        # External port
+      targetPort: 9090 # Port Prometheus listens to inside the container
+  type: LoadBalancer
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana-service
+  namespace: observation
+spec:
+  selector:
+    app: grafana
+  ports:
+    - protocol: TCP
+      port: 80        # External port
+      targetPort: 3000 # Port Grafana listens to inside the container
+  type: LoadBalancer
